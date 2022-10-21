@@ -4,13 +4,14 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Data.SqlClient;
 namespace Logica.Models
 {
     public class Usuario
     {
         public int IDUsuario { get; set; }
         public string CedulaUsuario { get; set; }
+        public string Nombre { get; set; }
         public string NombreUsuario { get; set; }
 
         public string Contrasennia { get; set; }
@@ -30,6 +31,26 @@ namespace Logica.Models
         public bool Agregar()
         {
             bool R = false;
+
+
+            Conexion MiCnn = new Conexion();
+            MiCnn.ListaParametros.Add(new SqlParameter("@Email", this.Email));
+            MiCnn.ListaParametros.Add(new SqlParameter("@Nombre", this.Nombre));
+            MiCnn.ListaParametros.Add(new SqlParameter("@Cedula", this.CedulaUsuario));
+            MiCnn.ListaParametros.Add(new SqlParameter("@NombreUsuario", this.NombreUsuario));
+           
+            
+            MiCnn.ListaParametros.Add(new SqlParameter("@Contrasennia", this.Contrasennia));
+
+            
+            MiCnn.ListaParametros.Add(new SqlParameter("@IDRol", this.MiRol.IDUsuarioRol));
+            MiCnn.ListaParametros.Add(new SqlParameter("@IDEmpresa", this.MiEmpresa.IDEmpresa));
+
+            int Resultado = MiCnn.EjecutarUpdateDeleteInsert("SPUsuarioAgregar");
+            if (Resultado > 0)
+            {
+                R = true;
+            }
 
             return R;
 
@@ -61,6 +82,17 @@ namespace Logica.Models
 
             bool R = false;
 
+            Conexion MiCnn = new Conexion();
+            MiCnn.ListaParametros.Add(new SqlParameter("@Cedula",this.CedulaUsuario));
+
+            DataTable Consulta = MiCnn.EjecutarSelect("SPUsuarioConsultarPorCedula");
+
+            if (Consulta !=null && Consulta.Rows.Count >0)
+            {
+                R = true;
+            }
+            
+                
             return R;
 
         }
@@ -69,11 +101,34 @@ namespace Logica.Models
 
             bool R = false;
 
+            Conexion MiCnn = new Conexion();
+
+            MiCnn.ListaParametros.Add(new SqlParameter("@NombreUsuario", this.NombreUsuario));
+
+            DataTable Consulta = MiCnn.EjecutarSelect("SPUsuarioConsultarPorNombreUsuario");
+
+            if (Consulta != null && Consulta.Rows.Count > 0)
+            {
+                R = true;
+            }
+
             return R;
 
         }
         public bool ConsultarPorEmail()
         {
+            bool R = false;
+            Conexion MiCnn = new Conexion();
+
+            MiCnn.ListaParametros.Add(new SqlParameter("@Email", this.Email));
+
+            DataTable Consulta = MiCnn.EjecutarSelect("SPUsuarioConsultarPorEmail");
+
+            if (Consulta != null && Consulta.Rows.Count > 0)
+            {
+                R = true;
+            }
+
 
             bool R = false;
 

@@ -9,14 +9,18 @@ namespace Logica.Models
 {
     public class UsuarioRol
     {
-        public int IDUsuario{ get; set; }
+        public int IDUsuarioRol{ get; set; }
 
         public string Rol { get; set; }
 
-        DataTable listar()
+        public DataTable listar()
         {
-            DataTable r = new DataTable();
-            return r;
+            DataTable R = new DataTable();
+
+            Conexion Micnn = new Conexion();
+            R = Micnn.EjecutarSelect("SPUsuarioRolListar");
+
+            return R;
         }
 
     }
